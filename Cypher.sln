@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cypher", "Cypher\Cypher.csproj", "{BA2371BA-E459-4DBA-8C0C-44C7534B24AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cypher.Tests", "Cypher.Tests\Cypher.Tests.csproj", "{A46C497E-AB39-41F5-9785-9254A82BC87A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA2371BA-E459-4DBA-8C0C-44C7534B24AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA2371BA-E459-4DBA-8C0C-44C7534B24AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA2371BA-E459-4DBA-8C0C-44C7534B24AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA2371BA-E459-4DBA-8C0C-44C7534B24AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A46C497E-AB39-41F5-9785-9254A82BC87A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A46C497E-AB39-41F5-9785-9254A82BC87A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A46C497E-AB39-41F5-9785-9254A82BC87A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A46C497E-AB39-41F5-9785-9254A82BC87A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
