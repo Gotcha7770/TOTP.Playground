@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using System.IO.Abstractions.Extensions;
+using FluentAssertions.FileSystem;
 using System.IO.Abstractions.TestingHelpers;
 using Cypher.Commands;
 using FluentAssertions;
@@ -10,7 +10,7 @@ namespace Cypher.Tests.Commands;
 
 public class SetCommandsTests
 {
-    private readonly IFileSystem fileSystem = new MockFileSystem();
+    private readonly MockFileSystem fileSystem = new MockFileSystem();
     private readonly string path;
 
     public SetCommandsTests()
@@ -27,24 +27,17 @@ public class SetCommandsTests
         app.SetDefaultCommand<SetCommand>();
         app.Configure(config =>
         {
-            config.Settings.Registrar.RegisterInstance(fileSystem);
+            config.Settings.Registrar.RegisterInstance<IFileSystem>(fileSystem);
             config.PropagateExceptions();
         });
 
-        var result = app.Run(new[]
-        {
-            "-u",
-            "John",
-            "-p",
-            "Password",
-            "-s",
-            "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G"
-        });
+        var result = app.Run(
+            "-u", "John",
+            "-p", "Password",
+            "-s", "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G");
 
         result.ExitCode.Should().Be(0);
-        fileSystem.CurrentDirectory()
-            .File(this.path)
-            .Should()
-            .NotBeNull();
+        fileSystem.Should()
+            .Contain(this.path);
     }
 }
