@@ -7,6 +7,8 @@ public static class CypherExtensions
 {
     public static async Task WriteToFile(this IFileSystem fileSystem, string path, string data)
     {
+        if (fileSystem.File.Exists(path))
+            fileSystem.File.Delete(path);
         await using Stream stream = EncryptStream(fileSystem.File.OpenWrite(path));
         await using StreamWriter writer = new StreamWriter(stream);
 
