@@ -1,7 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System.Buffers.Text;
+using System.ComponentModel;
 using System.IO.Abstractions;
 using System.Text.Json;
 using Cypher.Infrastructure;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Cypher.Commands;
@@ -13,17 +15,34 @@ public class SetCommand : AsyncCommand<SetCommand.Settings>
     public class Settings : CommandSettings
     {
         [Description("Имя пользователя для подключения по VPN")]
-        [CommandOption("-u|--user")]
+        [CommandArgument(0, "<user>")]
         public string User { get; set; }
 
         [Description("Пароль для подключения по VPN")]
-        [CommandOption("-p|--password")]
+        [CommandArgument(1, "<password>")]
         public string Password { get; set; }
 
         [Description("Секрет выданный для подключения через аутентификатор, можно получить его из QR кода" +
                      "otpauth://totp/user@hob?secret=<вот это значение, которое нужно>")]
-        [CommandOption("-s|--secret")]
+        [CommandArgument(2, "<secret>")]
         public string Secret { get; set; }
+
+        public override ValidationResult Validate()
+        {
+            if (string.IsNullOrWhiteSpace(User))
+                return ValidationResult.Error("user name argument should be set");
+
+            if (string.IsNullOrWhiteSpace(Password))
+                return ValidationResult.Error("password argument should be set");
+
+            if (string.IsNullOrWhiteSpace(Secret))
+                return ValidationResult.Error("secret argument should be set");
+
+            if(!Base64.IsValid(Secret))
+                return ValidationResult.Error("secret argument should be correct Base64 string");
+
+            return ValidationResult.Success();
+        }
     }
 
     public SetCommand(IFileSystem fileSystem)

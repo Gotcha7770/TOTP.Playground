@@ -7,6 +7,11 @@ var app = new CommandApp();
 
 app.Configure(config =>
 {
+#if DEBUG
+    config.PropagateExceptions();
+    config.ValidateExamples();
+#endif
+
     config.Settings.Registrar.RegisterInstance<IFileSystem>(new FileSystem());
     config.Settings.Registrar.RegisterInstance(AnsiConsole.Console);
 

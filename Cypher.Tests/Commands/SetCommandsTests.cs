@@ -6,6 +6,7 @@ using Cypher.Infrastructure;
 using FluentAssertions;
 using Spectre.Console.Cli;
 using Spectre.Console.Testing;
+using static FluentAssertions.FluentActions;
 
 namespace Cypher.Tests.Commands;
 
@@ -25,9 +26,9 @@ public class SetCommandsTests
     public void SetCommand()
     {
         var result = CreateApp().Run(
-            "-u", "John",
-            "-p", "Password",
-            "-s", "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G");
+            "John",
+            "Password",
+            "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G");
 
         result.ExitCode.Should().Be(0);
         fileSystem.Should()
@@ -35,18 +36,45 @@ public class SetCommandsTests
     }
 
     [Fact]
+    public void SetCommand_NullOrWhitespaceOption_ValidationException()
+    {
+        Invoking(() => CreateApp()
+                .Run("John",
+                     "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G"))
+            .Should()
+            .Throw<CommandRuntimeException>();
+
+        Invoking(() => CreateApp()
+                .Run("John",
+                     " ",
+                     "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G"))
+            .Should()
+            .Throw<CommandRuntimeException>();
+    }
+
+    [Fact]
+    public void SetCommand_SecretIsNotBase64_ValidationException()
+    {
+        Invoking(() => CreateApp()
+                .Run("John",
+                     "Password",
+                     "otpauth://totp/user@hob?secret=PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G"))
+            .Should()
+            .Throw<CommandRuntimeException>();
+    }
+
+    [Fact]
     public async Task RewriteStorage()
     {
-        var result = CreateApp().Run(
-            "-u", "John",
-            "-p", "Password",
-            "-s", "TEST-00000000000000000000000000000000000000000000");
+        var result = CreateApp()
+            .Run("John",
+                 "Password",
+                 "YmlnIG5vbmcgdGVzdCBiYXNlNjQgc3RyaW5n");
 
-
-        result = CreateApp().Run(
-            "-u", "John",
-            "-p", "Password",
-            "-s", "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G");
+        result = CreateApp()
+            .Run("John",
+                "Password",
+                "PEPTHLLCKWFSFJVCMX7QNHITRM2PDS3G");
 
         result.ExitCode.Should()
             .Be(0);
